@@ -207,12 +207,15 @@ function update_certs {
         fi
 
         echo "Creating/renewal $base_domain certificates... (${hosts_array_expanded[*]})"
-        /usr/bin/simp_le \
-            -f account_key.json -f key.pem -f chain.pem -f fullchain.pem -f cert.pem \
-            $params_d_str \
-            --cert_key_size=$cert_keysize \
-            --server=$acme_ca_uri \
-            --default_root /usr/share/nginx/html/
+        /app/acme.sh/acme.sh --issue \
+          --dns dns_aws \
+          --keylength $cert_keysize \
+          --key-file /etc/nginx/certs/$base_domain/key.pem \
+          --fullchain-file /etc/nginx/certs/$base_domain/fullchain.pem \
+          --cert-file  /etc/nginx/certs/$base_domain/cert.crt \
+          --ca-file  /etc/nginx/certs/$base_domain/ca.pem \
+          --debug \
+          $params_d_str
 
         simp_le_return=$?
 

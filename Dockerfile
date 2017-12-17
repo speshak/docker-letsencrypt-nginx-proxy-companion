@@ -19,7 +19,7 @@ RUN go get github.com/jwilder/docker-gen \
 
 FROM alpine:3.8
 
-LABEL maintainer="Yves Blusseau <90z7oey02@sneakemail.com> (@blusseau)"
+LABEL maintainer="Scott Peshak <scott@peshak.net>"
 
 ENV DEBUG=false \
     DOCKER_HOST=unix:///var/run/docker.sock
@@ -38,11 +38,8 @@ RUN apk add --update \
 COPY --from=go-builder /go/src/github.com/jwilder/docker-gen/docker-gen /usr/local/bin/
 
 # Install simp_le
-COPY /install_simp_le.sh /app/install_simp_le.sh
-RUN chmod +rx /app/install_simp_le.sh \
-    && sync \
-    && /app/install_simp_le.sh \
-    && rm -f /app/install_simp_le.sh
+COPY /install_acme_sh.sh /app/install_acme_sh.sh
+RUN chmod +rx /app/install_acme_sh.sh && sync && /app/install_acme_sh.sh && rm -f /app/install_acme_sh.sh
 
 COPY /app/ /app/
 
