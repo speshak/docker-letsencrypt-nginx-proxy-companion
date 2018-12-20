@@ -171,7 +171,7 @@ function update_certs {
             account_alias=default
         fi
 
-        [[ "$(lc $DEBUG)" == true ]] && params_d_str+=" -v"
+        [[ "$(lc $DEBUG)" == true ]] && params_d_str+=" --debug "
         [[ $REUSE_PRIVATE_KEYS == true ]] && params_d_str+=" --reuse_key"
         [[ "${1}" == "--force-renew" ]] && params_d_str+=" --valid_min 7776000"
 
@@ -207,14 +207,14 @@ function update_certs {
         fi
 
         echo "Creating/renewal $base_domain certificates... (${hosts_array_expanded[*]})"
-        /app/acme.sh/acme.sh --issue \
+
+        DEBUG=2 /app/acme.sh/acme.sh --issue \
           --dns dns_aws \
           --keylength $cert_keysize \
           --key-file /etc/nginx/certs/$base_domain/key.pem \
           --fullchain-file /etc/nginx/certs/$base_domain/fullchain.pem \
           --cert-file  /etc/nginx/certs/$base_domain/cert.crt \
           --ca-file  /etc/nginx/certs/$base_domain/ca.pem \
-          --debug \
           $params_d_str
 
         simp_le_return=$?
